@@ -1,19 +1,64 @@
+import { Canvas } from "@react-three/fiber";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Scene from "./Scene";
+import { useEffect, useRef, useState } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 function App() {
+  const mainRef = useRef(null);
+  const sceneRef = useRef(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: mainRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+          onUpdate: (self) => {
+            setProgress(self.progress);
+          },
+        },
+      })
+      .to(sceneRef.current, {
+        ease: "none",
+        x: "-25vw",
+        y: "100vh",
+      })
+      .to(sceneRef.current, {
+        ease: "none",
+        x: "25vw",
+        y: "200vh",
+      })
+      .to(sceneRef.current, {
+        ease: "none",
+        x: "-25vw",
+        y: "300vh",
+      });
+  }, []);
+
   return (
-    <main class="overflow-x-hidden bg-black">
+    <main ref={mainRef} className="overflow-x-hidden bg-gray-500">
       <section className="relative grid place-items-center h-[100vh]">
-        <p className="text-white text-center absolute top-[5%] mx-4 w-fit text-8xl font-bold">
+        <p className="text-white text-center absolute top-[5%] mx-4 w-fit text-4xl md:text-6xl lg:text-8xl font-bold">
           Jinx
         </p>
-        <p className="text-white text-center absolute bottom-[5%] mx-4 w-fit text-8xl font-bold">
+        <p className="text-white text-center absolute bottom-[5%] mx-4 w-fit text-4xl md:text-6xl lg:text-8xl font-bold">
           La Bala Perdida de Zaun
         </p>
-        <div className="h-[100vh] text-white"></div>
+        <div ref={sceneRef} className="h-[100vh] w-[100vw] text-white">
+          <Canvas className="w-full h-full">
+            <Scene progress={progress} />
+          </Canvas>
+        </div>
       </section>
 
-      <section className="relative flex items-center justify-evenly h-[100vh]">
+      <section className="relative flex flex-wrap items-center justify-evenly h-[100vh] px-4 md:px-8">
         <p className="w-[50%] border-0 border-red-700"></p>
-        <p class="text-white w-[50%] text-center px-4 text-4xl font-semibold">
+        <p className="text-white w-[50%] text-center px-2 md:px-4 text-xl md:text-4xl font-semibold">
           Jinx es una de las campeonas más populares de League of Legends,
           destacando como una tiradora de alto daño y gran capacidad para
           arrasar en peleas largas. Desde su lanzamiento en 2013, ha sido una
@@ -22,8 +67,8 @@ function App() {
           "snowball".
         </p>
       </section>
-      <section class="relative flex items-center justify-evenly h-[100vh]">
-        <p className="text-white order-1 w-[50%] text-center px-4 text-4xl font-semibold">
+      <section className="relative flex flex-wrap items-center justify-evenly h-[100vh] px-4 md:px-8">
+        <p className="text-white order-1 w-[50%] text-center px-2 md:px-4 text-xl md:text-4xl font-semibold">
           Su kit de habilidades está diseñado para el caos y la destrucción. Su
           pasiva, ¡Dispara y corre!, le otorga una gran velocidad de movimiento
           y ataque tras participar en una eliminación, lo que le permite
@@ -35,9 +80,9 @@ function App() {
         </p>
         <p className="w-[50%] order-2"></p>
       </section>
-      <section className="relative flex items-center justify-evenly h-[100vh]">
+      <section className="relative flex items-center justify-evenly h-[100vh] px-4 md:px-8">
         <p className="w-[50%] border-0 border-red-700"></p>
-        <p className="text-white w-[50%] text-center px-4 text-3xl font-semibold">
+        <p className="text-white w-[50%] text-center px-2 md:px-4 text-xl md:text-3xl font-semibold">
           Además de su potencia en duelos, Jinx cuenta con herramientas de
           control de masas. Su W, Zap!, dispara un rayo eléctrico que ralentiza
           a los enemigos y los revela, ideal para hostigar o asegurar objetivos.
